@@ -19,7 +19,9 @@ public static partial class Tasks
     /// </summary>
     public static IEnumerable<Emp> Task1()
     {
-        return null;
+        // 
+        return Emps
+            .Where(x =>x.Job == "Backend programmer");
     }
 
     /// <summary>
@@ -27,7 +29,10 @@ public static partial class Tasks
     /// </summary>
     public static IEnumerable<Emp> Task2()
     {
-        return null;
+        // zwykłe order by jest asc, aby było desc to używamy drugiej fincji
+        return Emps
+            .Where(x =>x.Job == "Frontend programmer" && x.Salary > 1000)
+            .OrderByDescending(x => x.Ename);
     }
 
 
@@ -36,7 +41,8 @@ public static partial class Tasks
     /// </summary>
     public static int Task3()
     {
-        return -1;
+        return Emps
+            .Max(x => x.Salary);
     }
 
     /// <summary>
@@ -44,7 +50,8 @@ public static partial class Tasks
     /// </summary>
     public static IEnumerable<Emp> Task4()
     {
-        return null;
+        return Emps
+            .Where(x => x.Salary == Emps.Max(y => y.Salary));
     }
 
     /// <summary>
@@ -52,7 +59,7 @@ public static partial class Tasks
     /// </summary>
     public static IEnumerable<object> Task5()
     {
-        return null;
+        return Emps.Select(x => new { Nazwisko = x.Ename, Praca = x.Job});
     }
 
     /// <summary>
@@ -62,7 +69,7 @@ public static partial class Tasks
     /// </summary>
     public static IEnumerable<object> Task6()
     {
-        return null;
+        return Emps.Join(Depts, x => x.Deptno, x => x.Deptno, (emp, dept) => new {emp.Ename, emp.Job, dept.Dname});
     }
 
     /// <summary>
@@ -70,7 +77,9 @@ public static partial class Tasks
     /// </summary>
     public static IEnumerable<object> Task7()
     {
-        return null;
+        return Emps
+            .GroupBy(x => x.Job)
+            .Select(grupa => new { Praca = grupa.Key, LiczbaPracownikow = grupa.Count() });
     }
 
     /// <summary>
@@ -78,8 +87,9 @@ public static partial class Tasks
     ///     z elementów kolekcji pracuje jako "Backend programmer".
     /// </summary>
     public static bool Task8()
-    { 
-        return false;
+    {
+        int ile = Emps.Count(x => x.Job == "Backend programmer");
+        return ile > 0;
     }
 
     /// <summary>
@@ -88,7 +98,10 @@ public static partial class Tasks
     /// </summary>
     public static Emp Task9()
     {
-        return null;
+        return Emps
+            .Where(x => x.Job == "Frontend programmer")
+            .OrderByDescending(x => x.HireDate)
+            .First();
     }
 
     /// <summary>
@@ -98,7 +111,9 @@ public static partial class Tasks
     /// </summary>
     public static IEnumerable<object> Task10()
     {
-        return null;
+        return Emps
+            .Select(x => new {x.Ename, x.Job, x.HireDate})
+            .Union<object>(new[] {"Brak wartosci", null, null});
     }
 
     /// <summary>
@@ -114,7 +129,11 @@ public static partial class Tasks
     /// </summary>
     public static IEnumerable<object> Task11()
     {
-        return null;
+        return Emps.Join(Depts, x => x.Deptno, x => x.Deptno, (emp, dept) => new {emp.Ename, dept. Dname})
+                .GroupBy(x => x.Dname)
+                .Select(grupa => new { name = grupa.Key, numOfEmployees = grupa.Count()})
+                .Where(x => x.numOfEmployees > 1)
+            ;
     }
 
     /// <summary>
@@ -139,7 +158,10 @@ public static partial class Tasks
     /// </summary>
     public static int Task13(int[] arr)
     {
-        return -1;
+        return arr
+            .GroupBy(x => x)
+            .Select(grupa => new {liczba = grupa.Key, ile = grupa.Count()})
+            .Where(x => x.ile % 2 == 1).First().liczba;
     }
 
     /// <summary>
@@ -148,6 +170,14 @@ public static partial class Tasks
     /// </summary>
     public static IEnumerable<Dept> Task14()
     {
-        return null;
+        var temp = Emps
+            .GroupBy(x => x.Deptno)
+            .Select(grupa => new { numer = grupa.Key, ile = grupa.Count() })
+            .Where(x => x.ile == 5 || x.ile == 0)
+            .Select(x => x.numer);
+
+        return Depts
+            .Where(x => temp.Contains(x.Deptno))
+            .OrderBy(x => x.Dname);
     }
 }

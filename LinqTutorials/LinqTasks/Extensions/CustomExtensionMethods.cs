@@ -4,9 +4,15 @@ namespace LinqTasks.Extensions;
 
 public static class CustomExtensionMethods
 {
-    //Put your extension methods here
+    ///     Metoda powinna zwrócić tylko tych pracowników, którzy mają min. 1 bezpośredniego podwładnego.
+    ///     Pracownicy powinny w ramach kolekcji być posortowani po nazwisku (rosnąco) i pensji (malejąco).
     public static IEnumerable<Emp> GetEmpsWithSubordinates(this IEnumerable<Emp> emps)
     {
-        return null;
+        var temp = emps
+            .Select(x => x.Mgr.Empno).ToList();
+        return emps
+            .Where(x => temp.Contains(x.Empno))
+            .OrderBy(x => x.Ename)
+            .ThenByDescending(x => x.Salary);
     }
 }
