@@ -112,8 +112,8 @@ public static partial class Tasks
     public static IEnumerable<object> Task10()
     {
         return Emps
-            .Select(x => new {x.Ename, x.Job, x.HireDate})
-            .Union<object>(new[] {"Brak wartosci", null, null});
+            .Select(x=> new {x.Ename, x.Job, x.HireDate })
+            .Union(new List<object> { new { Ename = "Brak wartości", Job = (string)null, HireDate = (DateTime?)null}});
     }
 
     /// <summary>
@@ -170,14 +170,9 @@ public static partial class Tasks
     /// </summary>
     public static IEnumerable<Dept> Task14()
     {
-        var temp = Emps
-            .GroupBy(x => x.Deptno)
-            .Select(grupa => new { numer = grupa.Key, ile = grupa.Count() })
-            .Where(x => x.ile == 5 || x.ile == 0)
-            .Select(x => x.numer);
-
+        int[] list = { 0, 5 };
         return Depts
-            .Where(x => temp.Contains(x.Deptno))
-            .OrderBy(x => x.Dname);
+            .Where(dept => list.Contains(Emps.Count(d=>d.Deptno==dept.Deptno)))
+            .OrderBy(dept => dept.Dname);
     }
 }
